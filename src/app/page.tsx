@@ -49,7 +49,7 @@ export default function Home() {
           <h1
             className={'bg-clip-text text-transparent bg-[linear-gradient(20deg,#8354F6_0%,#9899F6_100%)]'}>Prefix</h1>
         </div>
-        <p className="text-gray-400 underline text-sm md:text-medium">https://tailwind-prefix.vercel.app</p>
+        <p className="text-gray-400 underline text-sm md:text-medium flex gap-4"><a href={"https://tailwind-prefix.vercel.app"}>https://tailwind-prefix.vercel.app</a> <a href={'https://github.com/small-tou/tailwind-prefixer'}>Github</a></p>
       </div>
       <div className="z-10 max-w-8xl w-full   font-mono text-sm  h-full flex-1 flex flex-col">
         <Input placeholder={'Input prefix string'} label={'Prefix string'} value={prefix} onChange={(e) => {
