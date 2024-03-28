@@ -2,25 +2,15 @@
 
 import React, { useEffect, useState } from 'react';
 
-import CodeMirror from 'codemirror';
-import 'codemirror/lib/codemirror.css';
-import 'codemirror/addon/display/placeholder';
-import 'codemirror/theme/dracula.css';
-import 'codemirror/mode/xml/xml';
+
 import { Input } from '@nextui-org/input';
+import dynamic from 'next/dynamic';
+const Editor = dynamic(() => import('@/components/Editor'), { ssr: false });
 
 export default function Home() {
 
   const [inputHtml, setInputHtml] = useState<string>('');
   const [outHTML, setOutHTML] = useState<string>('');
-
-  const inputRef = React.useRef<HTMLTextAreaElement>(null);
-
-  const outputRef = React.useRef<HTMLTextAreaElement>(null);
-
-  const codemirrorEditor = React.useRef<any>(null);
-
-  const outputEditor = React.useRef<any>(null);
 
   const [prefix, setPrefix] = useState<string>('tw-');
 
@@ -46,54 +36,6 @@ export default function Home() {
 
   }, [inputHtml, prefix]);
 
-
-  useEffect(() => {
-    if (inputRef.current && !codemirrorEditor.current) {
-      codemirrorEditor.current = CodeMirror.fromTextArea(inputRef.current, {
-        lineNumbers: true,
-        mode: 'xml',
-        theme: 'dracula',
-        lineWrapping: true,
-        tabSize: 2,
-        indentUnit: 2,
-        smartIndent: true,
-        placeholder: 'Paste your html here',
-        gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
-      });
-
-      codemirrorEditor.current.on('change', (cm: any) => {
-        const code = cm.getValue();
-        setInputHtml(code);
-        // codemirrorEditor.current.setValue(formattedCode);
-      });
-    }
-  }, [inputRef]);
-
-  useEffect(() => {
-    outputEditor.current?.setValue(outHTML);
-  }, [outHTML]);
-
-  useEffect(() => {
-    if (outputRef.current && !outputEditor.current) {
-      outputEditor.current = CodeMirror.fromTextArea(outputRef.current, {
-        lineNumbers: true,
-        mode: 'xml',
-        theme: 'dracula',
-        lineWrapping: true,
-        tabSize: 2,
-        indentUnit: 2,
-        smartIndent: true,
-        gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
-      });
-
-      // 点击全选
-      outputEditor.current.on('focus', () => {
-        outputEditor.current.execCommand('selectAll');
-      });
-    }
-
-  }, [outputRef]);
-
   return (
     <main className="pb-24 flex min-h-screen flex-col items-center px-2 md:px-24 dark text-foreground bg-background">
       <div
@@ -115,16 +57,13 @@ export default function Home() {
         }} />
         <div className="grid grid-cols-8 gap-4 w-full h-full flex-1 flex flex-col mt-4">
           <div className={'col-span-4  h-full flex flex-col'}>
-            <textarea
-              ref={inputRef}
-              className={'w-full h-full p-4 bg-gray-800 text-white'}
-            />
+            <Editor placholder={'Paste your html here'} content={inputHtml} onChange={(e)=>{
+              setInputHtml(e);
+            }} />
 
           </div>
           <div className={'col-span-4'}>
-            <textarea
-              ref={outputRef}
-            />
+            <Editor placholder={''} content={outHTML} />
           </div>
 
         </div>
